@@ -10,7 +10,8 @@ data = yaml.safe_load(open(work_dir / "mkdocs.yml"))
 
 docs_dir = work_dir / "docs"
 html_dir = docs_dir / "html"
-shutil.rmtree(html_dir)
+if html_dir.exists():
+    shutil.rmtree(html_dir)
 shutil.copytree(work_dir / "html", html_dir)
 # search html files
 htmls = [HTML.from_file(i) for i in html_dir.rglob("*.html")]
