@@ -1,4 +1,5 @@
 import re
+import shutil
 from pathlib import Path
 from typing import NamedTuple
 
@@ -39,6 +40,7 @@ data = yaml.safe_load(open(work_dir / "mkdocs.yml"))
 
 docs_dir = work_dir / "docs"
 html_dir = docs_dir / "html"
+shutil.copytree(work_dir / "html", html_dir)
 # search html files
 htmls = [HTML.from_file(i) for i in html_dir.rglob("*.html")]
 if htmls:
