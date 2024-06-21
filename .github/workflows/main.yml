@@ -22,7 +22,4 @@ jobs:
         run: pip install -r requirements.txt
       
       - name: Deploy docs
-        run: |
-          git config user.name "${{ github.actor }}[bot]"
-          git config user.email ${{ github.actor }}[bot]@users.noreply.github.com
-          mkdocs gh-deploy --config-file mkdocs.yml --force
+        run: mkdocs gh-deploy --config-file mkdocs.yml --force
