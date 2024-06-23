@@ -3,17 +3,41 @@ from pathlib import Path
 
 import streamlit as st
 from datatype import HTML
+from git import Repo
 from pandas import DataFrame
+
+WORKDIR = Path(__file__).parent.parent
+HTMLDIR = WORKDIR / "html"
 
 
 @st.cache_data
 def load_file(filename: str):
-    path = Path(__file__).parent.parent / "html" / filename
+    path = HTMLDIR / filename
     return open(path, encoding="utf-8").read()
 
 
-source = Path(__file__).parent.parent / "html"
-files = DataFrame([HTML.from_file(i) for i in source.rglob("*.html")])
+def commit_and_push():
+    "upload new notes to github, use with caution"
+    repo = Repo(WORKDIR)
+    modified = [d.a_path for d in repo.index.diff(None) if d.a_path.startswith("html")]
+    added = [f for f in repo.untracked_files if f.startswith("html")]
+    changed = 0
+    if modified:
+        res = repo.index.add(modified)
+        changed += len(res)
+        repo.index.commit(f"Update {len(modified)} " + "note" if len(added) == 1 else "notes")
+    if added:
+        res = repo.index.add(added)
+        changed += len(res)
+        repo.index.commit(f"Add {len(added)} " + "note" if len(added) == 1 else "notes")
+
+    remote = repo.remote()
+    remote.pull()
+    remote.push()
+    return changed
+
+
+files = DataFrame([HTML.from_file(i) for i in HTMLDIR.rglob("*.html")])
 
 files["_selected"] = False  # select to download!
 edited_files = st.data_editor(
@@ -47,10 +71,13 @@ if uploaded_file is not None:
             info.warning(f"Overwrite '**`{old_filename}`**' since it has title '`{html.title}`'.")
 
     if st.button("confirm"):
-        path = source / uploaded_file.name
+        path = HTMLDIR / uploaded_file.name
         path.write_bytes(uploaded_file.getvalue())
         info.info(f"saved to `{path}`")
 
+if st.button("update github"):
+    res = commit_and_push()
+    info.info(f"{res} notes updated/added.")
 
 # reload
 st.divider()
