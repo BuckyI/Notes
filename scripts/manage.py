@@ -33,7 +33,7 @@ def commit_and_push():
 
     remote = repo.remote()
     remote.pull()
-    remote.push()
+    remote.push().raise_if_error()
     return changed
 
 
