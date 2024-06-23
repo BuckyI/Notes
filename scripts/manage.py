@@ -25,11 +25,11 @@ def commit_and_push():
     if modified:
         res = repo.index.add(modified)
         changed += len(res)
-        repo.index.commit(f"Update {len(modified)} " + "note" if len(added) == 1 else "notes")
+        repo.index.commit(f"📃 Update {len(modified)} " + "note" if len(added) == 1 else "notes")
     if added:
         res = repo.index.add(added)
         changed += len(res)
-        repo.index.commit(f"Add {len(added)} " + "note" if len(added) == 1 else "notes")
+        repo.index.commit(f"📃 Add {len(added)} " + "note" if len(added) == 1 else "notes")
 
     remote = repo.remote()
     remote.pull()
