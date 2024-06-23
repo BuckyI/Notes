@@ -9,3 +9,6 @@ theme:
 
 nav:
   - index.md
+
+extra_css:
+  - stylesheets/extra.css

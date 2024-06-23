@@ -25,7 +25,7 @@ if htmls:
             f.write("\n\n")  # make sure there is a blank line
             f.writelines([f"- {i.markdown_link()}\n" for i in htmls])
 
-    web_notes.extend({i.truncated_title: Path(html_dir, i.filename).relative_to(docs_dir).as_posix()} for i in htmls)
+    web_notes.extend({i.title: Path(html_dir, i.filename).relative_to(docs_dir).as_posix()} for i in htmls)
 
     # update mkdocs.yml
     data["nav"] = data.get("nav", [])

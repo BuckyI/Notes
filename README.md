@@ -1,6 +1,7 @@
 # README
 
 ```bash
+python scripts/clean.py 
 python scripts/prepocess.py
 mkdocs serve --config-file mkdocs_mod.yml
 ```
